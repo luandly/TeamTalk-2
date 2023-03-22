@@ -559,4 +559,3 @@ CREATE TABLE `IMUser` (
 
 INSERT INTO `IMUser` (`id`, `sex`, `name`, `domain`, `nick`, `password`, `salt`, `phone`, `email`, `avatar`, `departId`, `status`, `created`, `updated`, `push_shield_status`, `sign_info`)
  VALUES ('1', '0', 'test', 'test', 'test', '41f61f6b38c7adbb266bd5f73c147d66', '7605', '18657139000', 'test@test.com', '', '1', '0', '1428416403', '1428416403', '0', '时间');
-INSERT INTO `IMUser` VALUES (1, 1, 'test', '0', 'test', '41f61f6b38c7adbb266bd5f73c147d66', '7605', '18657139000', 'test@test.com', '', 1, 0, 1428416403, 1428416403);
