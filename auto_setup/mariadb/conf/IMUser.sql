@@ -57,6 +57,9 @@ INSERT INTO `IMUser` (`id`, `sex`, `name`, `domain`, `nick`, `password`, `salt`,
 (3, 0, 'testb', 'testb', 'testb', '41f61f6b38c7adbb266bd5f73c147d66', '7605', '18657139000', 'test@test.com', '', 1, 0, 1428416403, 1428416403, 0, '时间'),
 (4, 0, 'testc', 'testc', 'testc', '41f61f6b38c7adbb266bd5f73c147d66', '7605', '18657139000', 'test@test.com', '', 1, 0, 1428416403, 1428416403, 0, '时间');
 
+ INSERT INTO `IMUser` (`name` , `password` , `nick` , `domain` , `sex` , `phone` , `email` , `salt` , `departId` , `sign_info` , `push_shield_status` , `created` , `updated`)
+ VALUES ('user233' , '123456' , 'user233' , '记得微笑' , 0 , 'user233' , 'user233@163.com' , '8469' , 1 , '我的个性名字user233' , 0 , 1679490605 , 1679490605)
+
 --
 -- 转储表的索引
 --
