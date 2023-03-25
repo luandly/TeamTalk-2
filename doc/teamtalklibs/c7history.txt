@@ -258,3 +258,11 @@ git remote -v
 
 
 INSERT INTO IMUser (id, sex, name, domain, nick, password, salt, phone, email, avatar, departId, status, created, updated, push_shield_status, sign_info) VALUES ('1', '0', '101', '127.0.0.1', '', '', '', '', '', '', '1', '1', '1', '1', '0', '')
+
+分包压缩的命令
+tar czf - mysql-5.6.35.tar.gz | split -b 13m - mysql-5.6.35.tar.gz
+tar czf - gdb-7.9.tar.gz | split -b 13m - gdb-7.9.tar.gz.tar.gz
+tar czf - gcc-4.9.2.tar.gz | split -b 13m - gcc-4.9.2.tar.gz
+
+
+
