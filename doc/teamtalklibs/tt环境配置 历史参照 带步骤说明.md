@@ -1639,7 +1639,7 @@ aesKey=12345678901234567890123456789012
 
 
 
-telnet 10.5.45.63 
+telnet 10.5.45.63  lsof -i -Pn
 CentOS 7 下 ss 替代 netstat   ss -lntp | cat
 
 State      Recv-Q Send-Q Local Address:Port               Peer Address:Port              
