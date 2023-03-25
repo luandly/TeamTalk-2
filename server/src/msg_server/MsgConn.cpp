@@ -3,6 +3,25 @@
  *
  *  Created on: 2013-7-5
  *      Author: ziteng@mogujie.com
+ 
+ 
+ 2023-03-26 00:34:42,552 [INFO  IM] - <BaseSocket.cpp>|<329>|<_AcceptNewSocket>,AcceptNewSocket, socket=12 from 192.168.0.27:39792
+
+2023-03-26 00:34:42,564 [INFO  IM] - <MsgConn.cpp>|<448>|<_HandleLoginRequest>,HandleLoginReq, user_name=test, status=1, client_type=18, client=1.0.0, 
+2023-03-26 00:34:42,575 [INFO  IM] - <DBServConn.cpp>|<293>|<_HandleValidateResponse>,HandleValidateResp, user_name=test, result=0
+2023-03-26 00:34:42,575 [INFO  IM] - <DBServConn.cpp>|<352>|<_HandleValidateResponse>,user_name: test, uid: 1
+2023-03-26 00:34:42,600 [INFO  IM] - <MsgConn.cpp>|<876>|<_HandleClientDepartmentRequest>,HandleClientDepartmentRequest, user_id=1, latest_update_time=0.
+2023-03-26 00:34:42,606 [INFO  IM] - <MsgConn.cpp>|<829>|<_HandleClientAllUserRequest>,HandleClientAllUserReq, user_id=1, latest_update_time=1679675706. 
+2023-03-26 00:34:42,606 [INFO  IM] - <DBServConn.cpp>|<676>|<_HandleDepartmentResponse>,HandleDepartmentResponse, user_id=1, latest_update_time=0, dept_cnt=0.
+2023-03-26 00:34:42,616 [INFO  IM] - <MsgConn.cpp>|<549>|<_HandleClientRecentContactSessionRequest>,HandleClientRecentContactSessionRequest, user_id=1, latest_update_time=0. 
+2023-03-26 00:34:42,617 [INFO  IM] - <DBServConn.cpp>|<430>|<_HandleAllUserResponse>,HandleAllUserResponse, userId=1, latest_update_time=1679675706, user_cnt=0
+2023-03-26 00:34:42,626 [INFO  IM] - <GroupChat.cpp>|<37>|<HandleClientGroupNormalRequest>,HandleClientGroupNormalRequest, user_id=1. 
+2023-03-26 00:34:42,627 [INFO  IM] - <DBServConn.cpp>|<407>|<_HandleRecentSessionResponse>,HandleRecentSessionResponse, userId=1, session_cnt=0
+2023-03-26 00:34:42,629 [INFO  IM] - <MsgConn.cpp>|<670>|<_HandleClientUnreadMsgCntRequest>,HandleClientUnreadMsgCntReq, from_id=1 
+2023-03-26 00:34:42,629 [INFO  IM] - <GroupChat.cpp>|<71>|<HandleGroupNormalResponse>,HandleGroupNormalResponse, user_id=1, group_cnt=0. 
+2023-03-26 00:34:42,641 [INFO  IM] - <DBServConn.cpp>|<589>|<_HandleUnreadMsgCountResponse>,HandleUnreadMsgCntResp, userId=1, total_cnt=0, user_unread_cnt=0.
+
+登陆流程中的服务器日志
  */
 
 #include "MsgConn.h"
