@@ -1,0 +1,222 @@
+ip add
+cd php-5.3.28/
+cd ..
+ls
+mkdir -p /usr/local/zend/
+cp ZendGuardLoader-php-5.3-linux-glibc23-x86_64.tar.gz /usr/local/zend/ZendGuardLoader-php-5.3-linux-glibc23-x86_64.tar.gz
+tar -zxvf ZendGuardLoader-php-5.3-linux-glibc23-x86_64.tar.gz 
+cp ZendGuardLoader-php-5.3-linux-glibc23-x86_64/php-5.3.x/ZendGuardLoader.so /usr/local/zend/
+cat >>/usr/local/php/etc/php.ini<<EOF
+;
+
+cat >>/usr/local/php/etc/php.ini<<EOF
+;eaccelerator
+;ionCube
+[Zend Optimizer]
+zend_extension=/usr/local/zend/ZendGuardLoader.so
+zend_loader.enable=1
+zend_loader.disable_licensing=0
+zend_loader.obfuscation_level_support=3
+zend_loader.license_path=
+EOF
+
+cd ..
+cat >/usr/local/php/etc/php-fpm.conf<<EOF
+[global]
+pid = /usr/local/php/var/run/php-fpm.pid
+error_log = /usr/local/php/var/log/php-fpm.log
+log_level = notice
+[www]
+listen = /tmp/php-cgi.sock
+listen.backlog = -1
+listen.allowed_clients = 192.168.223.131
+listen.owner = www
+listen.group = www
+listen.mode = 0666
+user = www
+group = www
+pm = dynamic
+pm.max_children = 10
+pm.start_servers = 2
+pm.min_spare_servers = 1
+pm.max_spare_servers = 6
+request_terminate_timeout = 100
+request_slowlog_timeout = 0
+slowlog = var/log/slow.log
+EOF
+
+vim /etc/init.d/php-fpm
+chmod +x /etc/init.d/php-fpm
+groupadd www
+useradd -s /sbin/nologin -g www www
+/etc/init.d/php-fpm start
+ls
+pwd
+cd root/
+ls
+tar -zxvf pcre-8.40.tar.gz 
+cd pcre-8.40/
+./configure 
+make -j 2&& make install
+cd ..
+tar -zxvf nginx-1.6.0.tar.gz 
+cd nginx-1.6.0/
+./configure --user=www --group=www --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_ssl_module --with-http_gzip_static_module --with-ipv6
+make -j 2&& make install
+cd ..
+ln -s /usr/local/nginx/sbin/nginx /usr/bin/nginx
+vim /usr/local/nginx/conf/nginx.conf
+sudo rm -rf  /usr/local/nginx/conf/nginx.conf
+vim /usr/local/nginx/conf/nginx.conf
+mkdir -p /home/wwwroot/default
+chmod +w /home/wwwroot/default
+mkdir -p /home/wwwlogs
+chmod 777 /home/wwwlogs
+ 
+chown -R www:www /home/wwwroot/default
+vim /etc/init.d/nginx
+chmod +x /etc/init.d/nginx
+cat >/home/wwwroot/default/index.php<<EOF
+<?
+phpinfo();
+?>
+EOF
+
+/etc/init.d/nginx start
+ps -ef|grep nginx
+systemctl stop firewalld
+pwd
+tar -zxvf redis-2.8.19.tar.gz 
+cd redis-2.8.19/
+make PREFIX=/usr/local/redis install
+mkdir -p /usr/local/redis/etc/
+cp redis.conf /usr/local/redis/etc/
+sed -i 's/daemonize no/daemonize yes/g' /usr/local/redis/etc/redis.conf
+cd ..
+vim /etc/init.d/redis
+chmod +x /etc/init.d/redis
+/etc/init.d/redis start
+ps -ef|grep redis
+chkconfig --level 345 php-fpm on
+chkconfig --level 345 nginx on
+chkconfig --level 345 mysql on
+chkconfig --level 345 redis on
+pwd
+tar -zxvf gcc-4.9.2.tar.gz 
+cd gcc-4.9.2/
+./contrib/download_prerequisites
+pwd
+./contrib/download_prerequisites
+mkdir gcc-build-4.9.2
+cd gcc-build-4.9.2/
+../configure --prefix=/usr -enable-checking=release -enable-languages=c,c++ -disable-multilib
+make -j 2&& make install
+cd ../../
+ls
+tar -zxvf termcap-1.3.1.tar.gz 
+cd termcap-1.3.1/
+./configure --prefix=/usr
+make -j 2&& make install
+cd ..
+ls
+tar -zxvf gdb-7.9.tar.gz 
+cd gdb-7.9/
+./configure --prefix=/usr
+make -j 2&& make install
+shutdown -r now
+ yum -y update
+yum -y remove httpd* php* mysql-server mysql mysql-libs php-mysql
+yum -y install wget vim git texinfo patch make cmake gcc gcc-c++ gcc-g77 flex bison file libtool libtool-libs autoconf kernel-devel libjpeg libjpeg-devel libpng libpng-devel libpng10 libpng10-devel gd gd-devel freetype freetype-devel libxml2 libxml2-devel zlib zlib-devel glib2 glib2-devel bzip2 bzip2-devel libevent libevent-devel ncurses ncurses-devel curl curl-devel e2fsprogs e2fsprogs-devel krb5 krb5-devel libidn libidn-devel openssl openssl-devel vim-minimal nano fonts-chinese gettext gettext-devel ncurses-devel gmp-devel pspell-devel unzip libcap diffutils
+wget http://mirrors.163.com/mysql/Downloads/MySQL-5.7/mysql-5.7.30.tar.gz
+tar -zxvf mysql-5.7.30.tar.gz 
+cd mysql-5.7.30/
+cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8 -DDEFAULT_COLLATION=utf8_general_ci -DWITH_READLINE=1 -DWITH_SSL=system -DWITH_ZLIB=system -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1
+make -j 2 && make install
+cd ..
+ls
+rm -rf mysql-5.7.30
+rm -rf mysql-5.7.30.tar.gz 
+wget http://mirrors.163.com/mysql/Downloads/MySQL-5.7/mysql-5.7.29.tar.gz
+tar -zxvf mysql-5.7.29.tar.gz 
+cd mysql-5.7.29/
+cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8 -DDEFAULT_COLLATION=utf8_general_ci -DWITH_READLINE=1 -DWITH_SSL=system -DWITH_ZLIB=system -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1
+make -j 2 && make install
+cd ..
+rm -rf mysql-5.7.29
+wget http://mirrors.163.com/mysql/Downloads/MySQL-5.7/mysql-5.6.48.tar.gz
+wget http://mirrors.163.com/mysql/Downloads/MySQL-5.7/mysql-5.6.46.tar.gz
+wget http://mirrors.163.com/mysql/Downloads/MySQL-5.6/mysql-5.6.48.tar.gz
+tar -zxvf mysql-5.6.48.tar.gz 
+cd mysql-5.6.48/
+cmake -DCMAKE_INSTALL_PREFIX=/usr/local/mysql -DEXTRA_CHARSETS=all -DDEFAULT_CHARSET=utf8 -DDEFAULT_COLLATION=utf8_general_ci -DWITH_READLINE=1 -DWITH_SSL=system -DWITH_ZLIB=system -DWITH_EMBEDDED_SERVER=1 -DENABLED_LOCAL_INFILE=1
+make -j 2 && make install
+groupadd mysql
+useradd -s /sbin/nologin -M -g mysql mysql
+cd ..
+ls
+wget http://download.redis.io/releases/redis-2.8.19.tar.gz
+ls
+rm -rf redis-2.8.19.tar.gz
+mv redis-2.8.19.tar.gz.1 redis-2.8.19.tar.gz
+ls
+cd mysql-5.6.48/
+vim /etc/my.cnf
+/usr/local/mysql/scripts/mysql_install_db --defaults-file=/etc/my.cnf --basedir=/usr/local/mysql --datadir=/usr/local/mysql/var --user=mysql
+chown -R mysql /usr/local/mysql/var
+chgrp -R mysql /usr/local/mysql/.
+cp support-files/mysql.server /etc/init
+chmod 755 /etc/init.d/mysql
+/usr/local/mysql/scripts/mysql_install_db --defaults-file=/etc/my.cnf --basedir=/usr/local/mysql --datadir=/usr/local/mysql/var --user=mysql
+chown -R mysql /usr/local/mysql/var
+chgrp -R mysql /usr/local/mysql/.
+cp support-files/mysql.server /etc/init.d/mysql
+chmod 755 /etc/init.d/mysql
+cat > /etc/ld.so.conf.d/mysql.conf<<EOF
+/usr/local/mysql/lib
+/usr/local/lib
+EOF
+
+ldconfig
+/etc/init.d/mysql start
+ps -ef|grep mysql
+ln -s /usr/local/mysql/lib/mysql /usr/lib/mysql
+ln -s /usr/local/mysql/include/mysql /usr/include/mysql
+ln -s /usr/local/mysql/bin/mysql /usr/bin/mysql
+ln -s /usr/local/mysql/bin/mysqldump /usr/bin/mysqldump
+ln -s /usr/local/mysql/bin/myisamchk /usr/bin/myisamchk
+ln -s /usr/local/mysql/bin/mysqld_safe /usr/bin/mysqld_safe
+mysql -uroot -p
+mysql -uroot -p123456
+cd ..
+tar -zxvf libiconv-1.15.tar.gz 
+cd libiconv-1.15/
+./configure 
+make -j 2 && make install
+cd ..
+tar -zxvf libmcrypt-2.5.8.tar.gz 
+cd libmcrypt-2.5.8/
+./configure 
+make -j 2 && make install
+ldconfig
+cd libltdl/
+./configure --enable-ltdl-install
+make && make install
+cd ../../
+ls
+tar -zxvf mhash-0.9.9.9.tar.gz 
+cd mhash-0.9.9.9/
+./configure 
+make -j 2 && make install
+cd ../
+tar -zxvf php-7.4.0.tar.gz 
+cd php-7.4.0/
+./configure --prefix=/usr/local/php --with-config-file-path=/usr/local/php/etc --enable-fpm --with-fpm-user=www --with-fpm-group=www --with-mysql=mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --with-iconv-dir --with-freetype-dir --with-jpeg-dir --with-png-dir --with-zlib --with-libxml-dir=/usr --enable-xml --disable-rpath --enable-magic-quotes --enable-safe-mode --enable-bcmath --enable-shmop --enable-sysvsem --enable-inline-optimization --with-curl --enable-mbregex --enable-mbstring --with-mcrypt --enable-ftp --with-gd --enable-gd-native-ttf --with-openssl --with-mhash --enable-pcntl --enable-sockets --with-xmlrpc --enable-zip --enable-soap --without-pear --with-gettext --disable-fileinfo
+make -j 2 ZEND_EXTRA_LIBS='-liconv' && make install
+cd .
+cd ..
+ls
+rm -rf php-7.4.0
+tar -zxvf php-5.3.28.tar.gz 
+cd php-5.3.28/
+./configure --prefix=/usr/local/php --with-config-file-path=/usr/local/php/etc --enable-fpm --with-fpm-user=www --with-fpm-group=www --with-mysql=mysqlnd --with-mysqli=mysqlnd --with-pdo-mysql=mysqlnd --with-iconv-dir --with-freetype-dir --with-jpeg-dir --with-png-dir --with-zlib --with-libxml-dir=/usr --enable-xml --disable-rpath --enable-magic-quotes --enable-safe-mode --enable-bcmath --enable-shmop --enable-sysvsem --enable-inline-optimization --with-curl --enable-mbregex --enable-mbstring --with-mcrypt --enable-ftp --with-gd --enable-gd-native-ttf --with-openssl --with-mhash --enable-pcntl --enable-sockets --with-xmlrpc --enable-zip --enable-soap --without-pear --with-gettext --disable-fileinfo
+make -j 2 ZEND_EXTRA_LIBS='-liconv' && make install
